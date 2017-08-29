@@ -1,0 +1,286 @@
+<!Doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="quiz.css">
+		<script type="text/javascript">
+			var cn=0;
+			var cr=0;
+			var correct=0;
+
+			/*
+			This Function sets the score.
+			*/
+			
+			function user(userscore) 
+			{
+				this.score = userscore;
+			}
+				
+			/*
+			This function is the prototype of the user function.
+			*/
+			user.prototype = {
+						/*
+						This function has 3 parameters of array type, that holds the questions, choices and the background image.
+						*/
+						savescore:function(nam, arr, im) 
+						{
+							this.score=nam;
+							var sam = this.score;
+						
+							document.getElementById('question').innerHTML = sam;
+							document.getElementById('startit').style.visibility = "hidden";
+							document.getElementById('instructions').style.visibility = "hidden";
+							document.getElementById('Submit').style.display = "block";
+
+							//This checks the array length, and based on the array length, the questions and choices are displayed in the div sequentially.
+							if(cn<arr.length)
+							{
+								if(cn==0 )
+								{
+									document.getElementById(arr[cn]).style.display = "block";	
+									document.getElementById(im[cn]).style.display ="block";
+								}
+									
+								else if(cn>0 && cn < arr.length)
+								{
+									document.getElementById(arr[0]).innerHTML = document.getElementById(arr[cn]).innerHTML; 	
+									document.getElementById(im[0]).src = document.getElementById(im[cn]).src;
+								}
+								
+										cn++;
+							}
+							//If the variable becomes greater than the array length, the examover page is displayed.
+							else
+							{		
+
+								document.getElementById('examover').style.visibility = "show";	
+								document.getElementById(arr[0]).innerHTML= document.getElementById('examover').innerHTML;
+								document.getElementById('question').style.visibility = "hidden";
+								document.getElementById('Submit').style.visibility="hidden";
+								document.getElementById(im[0]).style.visibility="hidden";
+								document.getElementById('disp').style.visibility = "hidden";	
+								document.getElementById('time').style.visibility = "hidden";
+								document.getElementById('Timer').style.visibility = "hidden";
+							}						
+					}
+					
+				}
+
+				//Object is created.
+				firstuser = new user();
+				var i =0;
+				var j =0;
+				/*
+				This fucntion passes the arguments,and calls the savescore function using the object.
+				*/
+				function calling()
+				{
+
+					var qn = ['1.Who used Sachin Tendulkars bat to hit the fastest ever ODI century ?','2. How many matches has India won, while Dhoni being the captain ?','3. Against which team, did Anil Kumble dismissed all the 10 batsmen in an innings ?','4. Whose four successive sixes in the last over spirited West Indies to an amazing victory in the World T20 final in April ?',' 5. Who stepped down as his countrys captain to work on his game, immediately after scoring a double-century in the first Test of 2016?', '6. Who was sent home from a tour of Zimbabwe in November for calling his boss a "big idiot"?' , '7. Virat Kohli Scored 235 in the fourth Test against England, in Mumbai in December, was the highest score by an Indian captain. Who held the record before?', '8.Whose T20 hundred in August completed his full set of centuries in all three formats in only his 15th international match overall?','9. The first bowler to take a hat-trick in T20 international matches was Brett Lee. Who was the second player?','10. Who scored the maximum number of runs in the first season of the IPL?'];
+					var param = ["thisis","isis","is","is1","is2","is3","is4", "is5","is6","is7"];
+					var img =["mrf","Dhoni","Anil","west","test","west","Kohli","t20","lee","t20"];
+					
+					firstuser.savescore(qn[i],param,img);
+					i++;
+				}
+
+				/*
+				This function sets the timelimit, and calls the startTimer function.
+				*/
+				function timer() 
+				{
+					 var fiveMinutes = 60 * 5,
+	       			 display = document.querySelector('#time');
+	    			 startTimer(fiveMinutes, display);
+	   				 document.getElementById('disp').style.display = "block";
+	   			}
+
+	   			/*
+				This function sets the setInterval function, and when the timer ends, the quiz stops.
+				*/
+	   			function startTimer(duration, display)
+	   			{
+			    	var timer = duration, minutes, seconds;
+	   	 			setInterval(function () {
+	        		minutes = parseInt(timer / 60, 10)
+	        		seconds = parseInt(timer % 60, 10);
+
+	        		minutes = minutes < 10 ? "0" + minutes : minutes;
+	        		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	        		display.textContent = minutes + ":" + seconds;
+
+	        		if (--timer < 0) 
+	        		{
+	        	    	timer = duration;
+	        	    		document.getElementById('disp').style.visibility= "hidden";
+	        	    		document.getElementById('examover').style.visibility = "show";	
+							document.getElementById('question').innerHTML = document.getElementById('examover').innerHTML;
+							document.getElementById('thisis').style.visibility="hidden";
+							document.getElementById('Submit').style.visibility="hidden";	
+							
+	    	    	}
+		    		
+		    		}, 1000);
+				}
+
+				/*
+				This function is called, after submitting the answer. It checks whether the answer is correct and evaluates the score based on it.
+				*/
+				function Nextques() 
+				{
+					var y = ["qn1","qn2","qn3","qn4","qn5","qn6","qn7","qn8","qn9","qn10"];
+					var tes=0;
+					var x  = document.getElementsByClassName(y[j]);
+					j++;
+						
+						for(var i = 0; i < x.length; i++)
+						{
+							if(x[i].checked && x[i].value=='Correct')
+							{
+								cr+=1;
+							}
+							else
+							{
+								continue;
+							}	
+						}
+				}
+				/*
+				This function displays the score.
+				*/
+				function check()
+				{
+					document.getElementById('res').value=cr*10;
+					document.getElementById('buttone').style.display = "block";
+					document.getElementById('butttwo').style.display = "block";
+					var percent =document.getElementById('res').value;
+					document.getElementById('buttone').innerHTML= percent;
+					document.getElementById('front').style.display= "block";
+				}
+			</script>		
+	</head>
+	
+	<body>
+		<div class="flex-container">
+				<div class="header">
+					<span id="titleall">Cricket Quiz</span>
+						<span id ="disp" style="display: none">Time Remaining :<span id="time"></span></span>
+					<span id="Timer"></span>
+				</div>
+				
+				
+			<div class="content" >
+				<div id="questionall">
+					<div id="question"></div>
+				
+				    <div id="thisis" class="choicesof" style="display:none">
+			       		<input class ="qn1" type="radio" value="Correct" name="value">Shahid Afridi</input><br>
+			       		<input class ="qn1" type="radio" value="Net" name="value">Younis Khan</input><br>
+			       		<input class ="qn1" type="radio" value="Net" name="value">Ricky ponting</input><br>
+			       		<input class ="qn1" type="radio" value="Net" name="value">AB de Villiers	
+			    	</div>
+			    	<div id="isis" class="choicesof" style="display:none">
+			       		<input class ="qn2"  type="radio" value="Net" name="second">111</input><br>
+			       		<input class ="qn2"  type="radio" value="Correct" name="second">110</input><br>
+			       		<input class ="qn2"  type="radio" value="Net" name="second">109</input><br>
+			       		<input class ="qn2"  type="radio" value="Net" name="second">112
+			    	</div>
+			    	<div id="is" class="choicesof" style="display:none">
+			       		<input class ="qn3"  type="radio" value="Correct" name="second">Pakistan</input><br>
+			       		<input class ="qn3"  type="radio" value="Net" name="second">Sri Lanka</input><br>
+			       		<input class ="qn3"  type="radio" value="Net" name="second">South Africa</input><br>
+			       		<input class ="qn3"  type="radio" value="Net" name="second">Australia
+			    	</div>
+			    	<div id="is1" class="choicesof" style="display:none">
+			       		<input class ="qn4" type="radio" value="Net" name="value">Chris Gayle</input><br>
+			       		<input class ="qn4" type="radio" value="Net" name="value">Kraigg Brathwaite</input><br>
+			       		<input class ="qn4" type="radio" value="Correct" name="value">Carlos Brathwaite</input><br>
+			       		<input class ="qn4" type="radio" value="Net" name="value">Darren Sammy
+			    	</div>
+			    	<div id="is2" class="choicesof" style="display:none">
+			       		<input class ="qn5"  type="radio" value="Net" name="second">Brendon McCullum</input><br>
+			       		<input class ="qn5"  type="radio" value="Correct" name="second">Hashim Amla</input><br>
+			       		<input class ="qn5"  type="radio" value="Net" name="second">Brendan Taylor</input><br>
+			       		<input class ="qn5"  type="radio" value="Net" name="second">Denesh Ramdin
+			    	</div>
+			    	<div id="is3" class="choicesof" style="display:none">
+			       		<input class ="qn6"  type="radio" value="Correct" name="second">Darren Bravo</input><br>
+			       		<input class ="qn6"  type="radio" value="Net" name="second">Dwayne Bravo</input><br>
+			       		<input class ="qn6"  type="radio" value="Net" name="second">Chris Gayle</input><br>
+			       		<input class ="qn6"  type="radio" value="Net" name="second">Sulieman Benn
+			    	</div>
+			    	<div id="is4" class="choicesof" style="display:none">
+			       		<input class ="qn7"  type="radio" value="Correct" name="second">MS Dhoni</input><br>
+			       		<input class ="qn7"  type="radio" value="Net" name="second">Sunil Gavaskar</input><br>
+			       		<input class ="qn7"  type="radio" value="Net" name="second">Chris Gayle</input><br>
+			       		<input class ="qn7"  type="radio" value="Net" name="second">Vijay Hazare
+			    	</div>
+			    	<div id="is5" class="choicesof" style="display:none">
+			       		<input class ="qn8"  type="radio" value="Net" name="second">Moeen Ali</input><br>
+			       		<input class ="qn8"  type="radio" value="Net" name="second">Quinton de Kock</input><br>
+			       		<input class ="qn8"  type="radio" value="Correct" name="second">KL Rahul</input><br>
+			       		<input class ="qn8"  type="radio" value="Net" name="second">Sami Aslam
+			    	</div>
+			    	<div id="is6" class="choicesof" style="display:none">
+			       		<input class ="qn9"  type="radio" value="Net" name="second">Piyush Chawla</input><br>
+			       		<input class ="qn9"  type="radio" value="Net" name="second">Nuwan Kulasekara</input><br>
+			       		<input class ="qn9"  type="radio" value="Correct" name="second">Jacob Oram</input><br>
+			       		<input class ="qn9"  type="radio" value="Net" name="second">Andrew Flintoff
+			    	</div>
+			    	<div id="is7" class="choicesof" style="display:none">
+			       		<input class ="qn10"  type="radio" value="Correct" name="second">Shaun Marsh</input><br>
+			       		<input class ="qn10"  type="radio" value="Net" name="second">Jacques Kallis</input><br>
+			       		<input class ="qn10"  type="radio" value="Net" name="second">Shane Watson</input><br>
+			       		<input class ="qn10"  type="radio" value="Net" name="second">Matthew Hayden
+			    	</div>
+
+
+			    	<div id="Submit" style="display:none" onclick="Nextques(); calling();">Submit</div>
+
+			    	<img id="mrf" src="https://static.sportskeeda.com/wp-content/uploads/2016/09/sachin-tendulkar-1474541176-800.jpg" >
+					<img id="Dhoni" src="http://media2.intoday.in/indiatoday/images/stories/647_010517091159.jpg">
+					<img id="Anil" src="https://i.ytimg.com/vi/G4JDmIQXpbI/maxresdefault.jpg">
+					<img id="west" src="http://ccl6t.com/wp-content/uploads/2015/11/West-Indies-Team-Squad-ICC-T20-World-Cup-2016.jpg">
+					<img id ="test" src="http://www.kingcricket.co.uk/wp-content/uploads/2016/02/wicket.jpg">
+					<img id ="Kohli" style="display:none" src="https://static.sportzwiki.com/2016/07/11Kohli_ton.jpg">
+					<img id="t20" src="http://cricket-freaks.com/wp-content/uploads/2014/09/925580-flem-039-s-xi.jpg">
+					<img id="lee" src="http://www.cricketweb.net/news/features/BrettLee20100328052308.jpg">
+			    
+			   </div>	
+			    	<div id="instructions">
+			  			<div id="ins">INSTRUCTIONS</div>
+			  			<ul>
+			  			<li>Read all the instructions below, and start taking the quiz, by clicking the <b>"START"</b> button.</li>
+			  			<li>There are totally <b>10 questions</b> in this quiz. </li>
+			  			<li>You are expected to complete the quiz within <b>5 minutes</b>. If you exceed the time limit, the quiz will end.</li>
+			  			<li>You can't <b>Revisit</b> the previous questions, once submitted.</li>
+			  			<li>You need to score a <b>minimum of 70%</b>, in order to pass the quiz.</li>
+			  			<li>Once you answer a question, you have to click the <b>Submit</b> button, to submit the answer and move on to the next quesion.</li>
+			  			<li>Once you complete the quiz, you can view your <b>Score</b>  ! 
+			  			</ul>
+
+			  			<div id="startit" class="start" onclick="calling(); timer();">
+							START 
+						</div>
+			  		</div>
+
+			  		
+					<div id="examover"  style="display: none">
+							<div id="completed">You have Completed the quiz !</div>
+							<div id="score" onclick="check();">
+								Know Your Score !
+							</div>
+							<div id="front" style="display: none" > Your Score:</div> 
+							<div id="buttone" style="display: none"></div>
+							<div id="res"></div> 
+							<div id="butttwo" style="display: none">%</div>
+					</div>
+
+			</div>
+					
+		</div>	
+
+	</body>
+</html>
